@@ -13,4 +13,4 @@ def make_multiplier(multiplier: float) -> Callable[[float], float]:
     Returns:
         Callable[[float], float]: [description]
     """
-    return make_multiplier(multiplier)
+    return lambda x: x * multiplier
