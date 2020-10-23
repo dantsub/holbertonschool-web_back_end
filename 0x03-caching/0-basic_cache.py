@@ -12,18 +12,21 @@ class BasicCache(BaseCaching):
     """
 
     def put(self, key, item):
-        """[summary]
+        """put new value into cache_data dictionary
 
         Args:
-            key ([type]): [description]
-            item ([type]): [description]
+            key ([type]): key of dictionary self.cache_data
+            item ([type]): value of key
         """
-        pass
+        if key and item:
+            self.cache_data[key] = item
 
     def get(self, key):
-        """[summary]
+        """get value of cache_data dictionary
 
         Args:
-            key ([type]): [description]
+            key ([type]): key to search into cache_data
         """
-        pass
+        if not key or key not in self.cache_data:
+            return None
+        return self.cache_data[key]

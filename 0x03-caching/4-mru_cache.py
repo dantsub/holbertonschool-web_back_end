@@ -1,14 +1,14 @@
 #!/usr/bin/python3
 """MRUCache module
 """
-from base_caching import BasicCaching
+from base_caching import BaseCaching
 
 
-class MRUCache(BasicCaching):
+class MRUCache(BaseCaching):
     """FIFOCache class
 
     Args:
-        BasicCaching (class): Basic class for this class
+        BaseCaching (class): Basic class for this class
     """
 
     def put(self, key, item):
@@ -21,9 +21,11 @@ class MRUCache(BasicCaching):
         pass
 
     def get(self, key):
-        """[summary]
+        """get value of cache_data dictionary
 
         Args:
-            key ([type]): [description]
+            key ([type]): key to search into cache_data
         """
-        pass
+        if not key or key not in self.cache_data:
+            return None
+        return self.cache_data[key]
