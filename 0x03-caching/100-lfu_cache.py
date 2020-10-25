@@ -27,9 +27,10 @@ class LFUCache(BaseCaching):
         if key and item:
             if key not in self.cache_data:
                 self.__counter[key] = 1
-                self.__keys.append(key)
             else:
                 self.__counter[key] += 1
+                self.__keys.remove(key)
+            self.__keys.append(key)
             self.cache_data[key] = item
 
     def get(self, key):
@@ -41,6 +42,8 @@ class LFUCache(BaseCaching):
         if not key or key not in self.cache_data:
             return None
         self.__counter[key] += 1
+        self.__keys.remove(key)
+        self.__keys.append(key)
         return self.cache_data[key]
 
     def discard(self):
