@@ -28,7 +28,8 @@ class LRUCache(BaseCaching):
         if key and item:
             if key in self.cache_data:
                 idx = self.__keys.index(key)
-                self.__keys = self.__keys[idx + 1:] + self.__keys[:idx + 1]
+                if idx < 3:
+                    self.__keys = self.__keys[idx + 1:] + self.__keys[:idx + 1]
             else:
                 self.__keys.append(key)
             self.cache_data[key] = item
