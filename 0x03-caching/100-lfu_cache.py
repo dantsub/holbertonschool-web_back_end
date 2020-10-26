@@ -57,6 +57,6 @@ class LFUCache(BaseCaching):
         while self.__keys[low] not in keys:
             low += 1
         discard = self.__keys.pop(low)
-        del self.__counter[discard]
         del self.cache_data[discard]
+        del self.__counter[discard]
         print('DISCARD: {}'.format(discard))
