@@ -26,7 +26,11 @@ class LFUCache(BaseCaching):
         if not key and not item:
             return
         if len(self.cache_data) == self.MAX_ITEMS and key not in self.__keys:
-            self.discard()
+            low = self.find()
+            discard = self.__keys.pop(low)
+            del self.cache_data[discard]
+            del self.__counter[discard]
+            print('DISCARD: {}'.format(discard))
         if key not in self.cache_data:
             self.__counter[key] = 1
         else:
@@ -48,15 +52,11 @@ class LFUCache(BaseCaching):
         self.__keys.append(key)
         return self.cache_data[key]
 
-    def discard(self):
-        """discard item and print
+    def find(self):
+        """find key to drop
         """
         m_time = min(self.__counter.values())
         keys = [k for k, v in self.__counter.items() if v == m_time]
-        low = 0
-        while self.__keys[low] not in keys:
-            low += 1
-        discard = self.__keys.pop(low)
-        del self.cache_data[discard]
-        del self.__counter[discard]
-        print('DISCARD: {}'.format(discard))
+        for key in self.__keys:
+            if key in keys:
+                return self.__keys.index(key)
