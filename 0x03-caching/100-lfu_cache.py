@@ -11,6 +11,7 @@ class LFUCache(BaseCaching):
         BaseCaching (class): Basic class for this class
     """
     def __init__(self):
+        """constructor"""
         super().__init__()
         self.__keys = []
         self.__counter = {}
@@ -50,10 +51,11 @@ class LFUCache(BaseCaching):
     def discard(self):
         """discard item and print
         """
-        times = list(self.__counter.values())
-        m_time = min(times)
+        m_time = min(self.__counter.values())
         keys = [k for k, v in self.__counter.items() if v == m_time]
-        low = self.__keys.index(keys[0])
+        low = 0
+        while self.__keys[low] not in keys:
+            low += 1
         discard = self.__keys.pop(low)
         del self.cache_data[discard]
         del self.__counter[discard]
