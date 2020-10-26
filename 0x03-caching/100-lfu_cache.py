@@ -22,16 +22,17 @@ class LFUCache(BaseCaching):
             key ([type]): key of dictionary
             item ([type]): item to insert in dictionary
         """
+        if not key and not item:
+            return
         if len(self.cache_data) == self.MAX_ITEMS and key not in self.__keys:
             self.discard()
-        if key and item:
-            if key not in self.cache_data:
-                self.__counter[key] = 1
-            else:
-                self.__counter[key] += 1
-                self.__keys.remove(key)
-            self.__keys.append(key)
-            self.cache_data[key] = item
+        if key not in self.cache_data:
+            self.__counter[key] = 1
+        else:
+            self.__counter[key] += 1
+            self.__keys.remove(key)
+        self.__keys.append(key)
+        self.cache_data[key] = item
 
     def get(self, key):
         """get value of cache_data dictionary
@@ -49,12 +50,12 @@ class LFUCache(BaseCaching):
     def discard(self):
         """discard item and print
         """
+        times = list(self.__counter.values())
+        m_time = min(times)
+        keys = [k for k, v in self.__counter.items() if v == m_time]
         low = 0
-        for i in range(3):
-            key1 = self.__keys[low]
-            key2 = self.__keys[i + 1]
-            if self.__counter[key1] > self.__counter[key2]:
-                low = i + 1
+        while self.__keys[low] not in keys:
+            low += 1
         discard = self.__keys.pop(low)
         del self.__counter[discard]
         del self.cache_data[discard]
