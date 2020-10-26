@@ -53,9 +53,7 @@ class LFUCache(BaseCaching):
         times = list(self.__counter.values())
         m_time = min(times)
         keys = [k for k, v in self.__counter.items() if v == m_time]
-        low = 0
-        while self.__keys[low] not in keys:
-            low += 1
+        low = self.__keys.index(keys[0])
         discard = self.__keys.pop(low)
         del self.cache_data[discard]
         del self.__counter[discard]
