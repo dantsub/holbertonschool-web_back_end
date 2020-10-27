@@ -23,7 +23,7 @@ class LFUCache(BaseCaching):
             key ([type]): key of dictionary
             item ([type]): item to insert in dictionary
         """
-        if not key and not item:
+        if not key or not item:
             return
         if len(self.cache_data) == self.MAX_ITEMS and key not in self.__keys:
             low = self.find()
