@@ -9,7 +9,7 @@ import os
 import csv
 import mysql.connector
 
-PII_FIELDS = ("name", "email", "phone", "ssn", "ip")
+PII_FIELDS = ("name", "email", "phone", "ssn", "password")
 
 
 class RedactingFormatter(logging.Formatter):
@@ -46,8 +46,7 @@ def get_logger() -> logging.Logger:
     lg.setLevel(logging.INFO)
     lg.propagate = False
     sh = logging.StreamHandler()
-    f = RedactingFormatter(PII_FIELDS)
-    sh.setFormatter(f)
+    sh.setFormatter(RedactingFormatter(PII_FIELDS))
     lg.addHandler(sh)
     return lg
 
