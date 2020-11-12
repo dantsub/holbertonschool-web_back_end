@@ -15,23 +15,20 @@ from api.v1.auth.session_db_auth import SessionDBAuth
 
 
 app = Flask(__name__)
-app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 app.register_blueprint(app_views)
 CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 auth = None
-AUTH_TYPE = getenv("AUTH_TYPE")
 
-if AUTH_TYPE == 'basic_auth':
+if os.getenv("AUTH_TYPE") == 'basic_auth':
     auth = BasicAuth()
-elif AUTH_TYPE == 'session_auth':
+elif os.getenv("AUTH_TYPE") == 'session_auth':
     auth = SessionAuth()
-elif AUTH_TYPE == 'session_exp_auth':
+elif os.getenv("AUTH_TYPE") == 'session_exp_auth':
     auth = SessionExpAuth()
-elif AUTH_TYPE == 'session_db_auth':
+elif os.getenv("AUTH_TYPE") == 'session_db_auth':
     auth = SessionDBAuth()
 else:
     auth = Auth()
-
 
 
 @app.errorhandler(404)
@@ -70,8 +67,8 @@ def before_request():
     if not auth.require_auth(request.path, _paths):
         return
 
-    if auth.authorization_header(request) is None \
-            and auth.session_cookie(request) is None:
+    if not auth.authorization_header(request)\
+       and not auth.session_cookie(request):
         abort(401)
 
     request.current_user = auth.current_user(request)
