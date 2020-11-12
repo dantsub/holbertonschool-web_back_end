@@ -7,6 +7,11 @@ from api.v1.views import app_views
 from flask import Flask, jsonify, abort, request
 from flask_cors import (CORS, cross_origin)
 import os
+from api.v1.auth.auth import Auth
+from api.v1.auth.basic_auth import BasicAuth
+from api.v1.auth.session_auth import SessionAuth
+from api.v1.auth.session_exp_auth import SessionExpAuth
+from api.v1.auth.session_db_auth import SessionDBAuth
 
 
 app = Flask(__name__)
@@ -16,21 +21,17 @@ CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 auth = None
 AUTH_TYPE = getenv("AUTH_TYPE")
 
-if AUTH_TYPE == "auth":
-    from api.v1.auth.auth import Auth
-    auth = Auth()
-elif AUTH_TYPE == "basic_auth":
-    from api.v1.auth.basic_auth import BasicAuth
+if AUTH_TYPE == 'basic_auth':
     auth = BasicAuth()
-elif AUTH_TYPE == "session_auth":
-    from api.v1.auth.session_auth import SessionAuth
+elif AUTH_TYPE == 'session_auth':
     auth = SessionAuth()
-elif AUTH_TYPE == "session_exp_auth":
-    from api.v1.auth.session_exp_auth import SessionExpAuth
+elif AUTH_TYPE == 'session_exp_auth':
     auth = SessionExpAuth()
-elif AUTH_TYPE == "session_db_auth":
-    from api.v1.auth.session_db_auth import SessionDBAuth
+elif AUTH_TYPE == 'session_db_auth':
     auth = SessionDBAuth()
+else:
+    auth = Auth()
+
 
 
 @app.errorhandler(404)
@@ -73,11 +74,10 @@ def before_request():
             and auth.session_cookie(request) is None:
         abort(401)
 
-    c_user = auth.current_user(request)
-    if c_user is None:
-        abort(403)
+    request.current_user = auth.current_user(request)
 
-    request.current_user = c_user
+    if request.current_user is None:
+        abort(403)
 
 
 if __name__ == "__main__":
