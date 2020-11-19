@@ -72,4 +72,5 @@ class DB:
             if key not in DATA:
                 raise ValueError
             setattr(user, key, val)
+        self._session.commit()
         return None
