@@ -53,13 +53,10 @@ class DB:
         Returns:
             User: user found or raise error
         """
-        if not kwargs or any(x not in DATA for x in kwargs):
-            raise InvalidRequestError
-        session = self._session
-        try:
-            return session.query(User).filter_by(**kwargs).one()
-        except Exception:
+        user = self._session.query(User).filter_by(**kwargs).first()
+        if not user:
             raise NoResultFound
+        return user
 
     def update_user(self, user_id: int, **kwargs) -> None:
         """Update user
