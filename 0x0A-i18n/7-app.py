@@ -77,7 +77,7 @@ def checked_timezone(time_zone: str):
     Validated timezone
     """
     try:
-        return timezone(time_zone).zone
+        return timezone(time_zone)
     except UnknownTimeZoneError:
         return None
 
@@ -97,4 +97,4 @@ def get_timezone():
         check = checked_timezone(g.user['timezone'])
     else:
         check = app.config['BABEL_DEFAULT_TIMEZONE']
-    return check
+    return check if check else app.config['BABEL_DEFAULT_TIMEZONE']
