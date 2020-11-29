@@ -30,4 +30,7 @@ def index():
 
 @babel.localeselector
 def get_locale():
+    """
+    Get locale selector for babel
+    """
     return request.accept_languages.best_match(app.config['LANGUAGES'])
