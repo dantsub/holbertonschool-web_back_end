@@ -38,19 +38,18 @@ def call_history(method: Callable) -> Callable:
 
 def replay(method: Callable) -> None:
     """ Ouput log of actions taken on method """
-    counter_key = method.__qualname__
-    input_list_key = method.__qualname__ + ':inputs'
-    output_list_key = method.__qualname__ + ':outputs'
-    this = method.__self__
-
-    counter = this.get_str(counter_key)
-    history = list(zip(this.get_list(input_list_key),
-                       this.get_list(output_list_key)))
-    print("{} was called {} times:".format(counter_key, counter))
-    for call in history:
-        value = this.get_str(call[0])
-        key = this.get_str(call[1])
-        print("{}(*{}) -> {}".format(counter_key, value, key))
+    key = method.__qualname__
+    inputs = key + ":inputs"
+    outputs = key + ":outputs"
+    redis = method.__self__._redis
+    count = redis.get(key).decode("utf-8")
+    print(f"{key} was called {count} times:")
+    in_list = redis.lrange(inputs, 0, -1)
+    out_list = redis.lrange(outputs, 0, -1)
+    redis_zipped = list(zip(in_list, out_list))
+    for a, b in redis_zipped:
+        attr, result = a.decode("utf-8"), b.decode("utf-8")
+        print(f"{key}(*{attr}) -> {result}")
 
 
 class Cache:
