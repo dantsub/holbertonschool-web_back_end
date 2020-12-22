@@ -25,8 +25,8 @@ export default class Currency {
 
   /* setter code */
   set code(value) {
-    if (typeof value !== 'string') throw TypeError('Code must be a number');
-    this._length = value;
+    if (typeof value !== 'string') throw TypeError('Code must be a string');
+    this._code = value;
   }
 
   displayFullCurrency() {
