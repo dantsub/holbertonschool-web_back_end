@@ -1,2 +1,3 @@
-const displayMessage = (d) => process.stdout.write(d + '\n');
+const displayMessage = (d) => console.log(d);
+
 module.exports = displayMessage;
