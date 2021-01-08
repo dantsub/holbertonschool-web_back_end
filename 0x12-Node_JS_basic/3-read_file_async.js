@@ -1,4 +1,5 @@
 const fs = require('fs');
+
 module.exports = function countStudents(path) {
   return new Promise((resolve, reject) => {
     fs.readFile(path, { encoding: 'utf-8' }, (err, data) => {
@@ -14,7 +15,7 @@ module.exports = function countStudents(path) {
       const fields = {};
       const students = {};
 
-      lines.forEach(line => {
+      lines.forEach((line) => {
         const list = line.split(',');
         if (!fields[list[idxFd]]) fields[list[idxFd]] = 0;
         fields[list[idxFd]] += 1;
@@ -24,9 +25,12 @@ module.exports = function countStudents(path) {
 
       console.log(`Number of students: ${lines.length}`);
       for (const key in fields) {
-        console.log(`Number of students in ${key}: ${fields[key]}. List: ${students[key]}`);
+        if (Object.hasOwnProperty.call(fields, key)) {
+          const element = fields[key];
+          console.log(`Number of students in ${key}: ${element}. List: ${students[key]}`);
+        }
       }
       return resolve();
     });
   });
-}
+};
