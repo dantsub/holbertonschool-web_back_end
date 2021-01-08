@@ -15,17 +15,21 @@ function countStudents(path) {
       // declarate two dictionaries for count each fields and store list of students
       const fields = {};
       const students = {};
+      // it will contain all data
+      const all = {};
 
       lines.forEach((line) => {
         const list = line.split(',');
         if (!fields[list[idxFd]]) fields[list[idxFd]] = 0;
         fields[list[idxFd]] += 1;
         if (!students[list[idxFd]]) students[list[idxFd]] = '';
-        students[list[idxFd]] += students[list[idxFd]] ? `, ${list[idxFn]}` : list[idxFn];
+        students[list[idxFd]] += students[list[idxFd]]
+          ? `, ${list[idxFn]}`
+          : list[idxFn];
       });
 
-      all['numberStudents'] = `Number of students: ${lines.length}`;
-      all['listStudents'] = [];
+      all.numberStudents = `Number of students: ${lines.length}\n`;
+      all.listStudents = [];
       for (const key in fields) {
         if (Object.hasOwnProperty.call(fields, key)) {
           const element = fields[key];
@@ -47,16 +51,16 @@ const app = http.createServer((req, res) => {
   if (req.url === '/students') {
     res.write('This is the list of our students\n');
     countStudents(process.argv[2])
-    .then((data) => {
-      res.write(data.numberStudents);
-      res.write(data.listStudents.join('\n'));
-    })
-    .catch((err) => {
-      res.end(err.message);
-    })
+      .then((data) => {
+        res.write(data.numberStudents);
+        res.write(data.listStudents.join('\n'));
+        res.end();
+      })
+      .catch((err) => {
+        res.end(err.message);
+      });
   }
 });
-
 
 app.listen(port, hostname);
 
