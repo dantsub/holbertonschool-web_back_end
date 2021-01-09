@@ -44,23 +44,21 @@ function countStudents(path) {
 const app = express();
 const port = 1245;
 
-app
-  .get('/', (req, res) => {
-    res.send('Hello Holberton School!');
-  })
-  .get('/students', (req, res) => {
-    let string = 'This is the list of our students\n';
-    countStudents(process.argv[2])
-      .then((data) => {
-        string += data.numberStudents;
-        string += data.listStudents.join('\n');
-        res.send(string);
-      })
-      .catch((err) => {
-        res.send(err.message);
-      });
-  });
-
+app.get('/', (req, res) => {
+  res.send('Hello Holberton School!');
+});
+app.get('/students', (req, res) => {
+  let string = 'This is the list of our students\n';
+  countStudents(process.argv[2])
+    .then((data) => {
+      string += data.numberStudents;
+      string += data.listStudents.join('\n');
+      res.send(string);
+    })
+    .catch((err) => {
+      res.send(err.message);
+    });
+});
 app.listen(port);
 
 module.exports = app;
