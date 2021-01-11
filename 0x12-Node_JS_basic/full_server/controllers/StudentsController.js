@@ -20,7 +20,9 @@ module.exports = class StudentsController {
     if (!['SWE', 'CS'].includes(request.params.major)) response.status(500).send('Major parameter must be CS or SWE');
     readDatabase(process.argv[2])
       .then((data) => {
-        response.send(data[request.params.major].students) || response.status(500).send('Cannot load the database');
+        const printData = data[request.params.major].students;
+        if (printData) response.send(printData);
+        response.status(500).send('Major parameter must be CS or SWE');
       })
       .catch((err) => { response.send(err.message); });
   }
