@@ -8,7 +8,7 @@ module.exports = class StudentsController {
         for (const field in data) {
           if (Object.hasOwnProperty.call(data, field)) {
             const element = data[field];
-            printData += `Number of students in ${field}: ${element.number}. ${element.students}`;
+            printData += `\nNumber of students in ${field}: ${element.number}. ${element.students}`;
           }
         }
         response.send(printData);
@@ -17,10 +17,10 @@ module.exports = class StudentsController {
   }
 
   static getAllStudentsByMajor(request, response) {
-    if (!['SWE', 'CS'].includes(request.params.major)) response.send(500, 'Major parameter must be CS or SWE');
+    if (!['SWE', 'CS'].includes(request.params.major)) response.status(500).send('Major parameter must be CS or SWE');
     readDatabase(process.argv[2])
       .then((data) => {
-        response.send(data[request.params.major].students || 500, 'Cannot load the database');
+        response.send(data[request.params.major].students) || response.status(500).send('Cannot load the database');
       })
       .catch((err) => { response.send(err.message); });
   }

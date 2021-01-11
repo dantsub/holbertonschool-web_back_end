@@ -30,7 +30,7 @@ module.exports = function readDatabase(path) {
         if (Object.hasOwnProperty.call(fields, key)) {
           const number = fields[key];
           all[key] = {
-            students: `List: ${students[key]}\n`,
+            students: `List: ${students[key]}`,
             number,
           };
         }
